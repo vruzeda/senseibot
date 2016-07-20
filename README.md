@@ -6,6 +6,8 @@ senseibot is reactive bot for Slack whose purpose is to help us study Japanese.
 
 senseibot supports the following commands:
 
+- `senseibot kanji meaning <kanji>`: Returns the kanji's meaning from Jisho;
+- `senseibot kanji reading <kanji>`: Returns the kanji's reading from Jisho;
 - `senseibot <something>`: He'll echo whatever you say to him.
 
 Notice that senseibot's commands are case sensitive, unless implemented otherwise.
