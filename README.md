@@ -35,7 +35,7 @@ Currently, the bot runs on port 7001 (this should be extracted to a variable for
 To run it, execute:
 
 ```
-> node index.js
+> node senseibot.js
 ```
 
 ### Testing
