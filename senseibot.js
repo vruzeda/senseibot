@@ -23,7 +23,7 @@
   function kanjiMeaning(slackRequest, slackResponse, kanji) {
     request('http://jisho.org/search/' + encodeURI(kanji) + '%20%23kanji', function(error, jishoResponse, jishoData) {
       if (error) {
-        postToSlack(slackResponse, 'What\'s the meaning of ' + kanji + '? I don\'t it either!');
+        postToSlack(slackResponse, 'What\'s the meaning of ' + kanji + '? I don\'t know it either!');
         return;
       }
 
@@ -33,7 +33,7 @@
       if (meaningNodes.length > 0) {
         postToSlack(slackResponse, kanji + ' means ' + meaningNodes.join(', ').replace(/\s+/g, ' ').trim());
       } else {
-        postToSlack(slackResponse, 'What\'s the meaning of ' + kanji + '? I don\'t it either!');
+        postToSlack(slackResponse, 'What\'s the meaning of ' + kanji + '? I don\'t know it either!');
       }
     });
   }
@@ -41,7 +41,7 @@
   function kanjiReading(slackRequest, slackResponse, kanji) {
     request('http://jisho.org/search/' + encodeURI(kanji) + '%20%23kanji', function(error, jishoResponse, jishoData) {
       if (error) {
-        postToSlack(slackResponse, 'What\'s the reading of ' + kanji + '? I don\'t it either!');
+        postToSlack(slackResponse, 'What\'s the reading of ' + kanji + '? I don\'t know it either!');
         return;
       }
 
@@ -62,7 +62,7 @@
 
         postToSlack(slackResponse, readings);
       } else {
-        postToSlack(slackResponse, 'What\'s the reading of ' + kanji + '? I don\'t it either!');
+        postToSlack(slackResponse, 'What\'s the reading of ' + kanji + '? I don\'t know it either!');
       }
     });
   }
