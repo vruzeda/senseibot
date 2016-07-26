@@ -8,6 +8,8 @@ senseibot supports the following commands:
 
 - `senseibot kanji meaning <kanji>`: Returns the kanji's meaning from Jisho;
 - `senseibot kanji reading <kanji>`: Returns the kanji's reading from Jisho;
+- `senseibot word meaning <word>`: Returns the word's meaning from Jisho (in a "I'm feeling lucky" way);
+- `senseibot word reading <word>`: Returns the word's reading from Jisho (in a "I'm feeling lucky" way);
 - `senseibot <something>`: He'll echo whatever you say to him.
 
 Notice that senseibot's commands are case sensitive, unless implemented otherwise.
