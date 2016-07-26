@@ -9,37 +9,67 @@
   function wordMeaning(slackRequest, slackResponse, word) {
     request('http://jisho.org/search/' + encodeURI(word), function(error, jishoResponse, jishoData) {
       if (error) {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + word + '? I don\'t know it either!');
+        utils.postToSlack(slackResponse, 'What\'s the reading of ' + word + '? I don\'t know it either!');
         return;
       }
 
       var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(jishoData);
-      var inflectionNodes = select(doc, '//h6//a//text()');
-      var conceptNodes = select(doc, '//div[contains(@class, "concept_light-representation")][1]');
-      var wordNodes = select(conceptNodes[0], './/span[@class="text"]//text()');
-      var furiganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/node()').filter(function(node) { return node.toString().trim().length != 0 });
-      var textNodes = select(conceptNodes[0], './/span[@class="text"]/node()').filter(function(node) { return node.toString().trim().length != 0 });
+      var detailsLink = select(doc, '//a[@class="light-details_link"]/@href[1]');
 
-      var reading = '';
-      var furiganaIndex = 0;
-
-      for (var i = 0; i < textNodes.length; ++i, ++furiganaIndex) {
-        if (textNodes[i].firstChild) {
-          reading += textNodes[i].firstChild.data;
-        } else {
-          var text = textNodes[i].toString().trim();
-          for (var j = 0; j < text.length; ++j, ++furiganaIndex) {
-            reading += '[' + text.charAt(j) + ':' + furiganaNodes[furiganaIndex].firstChild.data + ']';
-          }
-          --furiganaIndex;
+      request(detailsLink[0].value, function(error, jishoResponse, jishoData) {
+        if (error) {
+          utils.postToSlack(slackResponse, 'What\'s the reading of ' + word + '? I don\'t know it either!');
+          return;
         }
-      }
 
-      if (reading.length > 0) {
-        utils.postToSlack(slackResponse, wordNodes.map(function(wordNode) { return wordNode.toString().trim(); }).join('') + '\'s reading is ' + reading);
-      } else {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + word + '? I don\'t know it either!');
-      }
+        var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(jishoData);
+        var conceptNode = select(doc, '//div[contains(@class, "concept_light-representation")][1]')[0];
+        var furiganaNodes = select(conceptNode, './/span[@class="furigana"]/node()').filter(function(node) { return node.toString().trim().length != 0 });
+        var textNodes = select(conceptNode, './/span[@class="text"]/node()').filter(function(node) { return node.toString().trim().length != 0 });
+
+        if (textNodes.length > 0) {
+          var reading = '';
+
+          var inflection = '';
+
+          for (var i = 0; i < textNodes.length; ++i) {
+            var textNode = textNodes[i];
+
+            if (textNode.firstChild) {
+              inflection += textNode.firstChild.data;
+            } else {
+              inflection += textNode.toString().trim();
+            }
+          }
+
+          if (word !== inflection) {
+            reading += word + ' looks like an inflection of ' + inflection + '\nIts reading is:\n';
+          } else {
+            reading += word + '\'s reading is:\n';
+          }
+
+          var furiganaIndex = 0;
+
+          for (var i = 0; i < textNodes.length; ++i, ++furiganaIndex) {
+            var textNode = textNodes[i];
+
+            if (textNode.firstChild) {
+              reading += textNode.firstChild.data;
+            } else {
+              var text = textNode.toString().trim();
+              for (var j = 0; j < text.length; ++j, ++furiganaIndex) {
+                var furiganaNode = furiganaNodes[furiganaIndex];
+                reading += '[' + text.charAt(j) + ':' + furiganaNode.firstChild.data + ']';
+              }
+              --furiganaIndex;
+            }
+          }
+
+          utils.postToSlack(slackResponse, reading);
+        } else {
+          utils.postToSlack(slackResponse, 'What\'s the reading of ' + word + '? I don\'t know it either!');
+        }
+      });
     });
   }
 

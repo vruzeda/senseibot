@@ -14,30 +14,52 @@
       }
 
       var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(jishoData);
-      var inflectionNodes = select(doc, '//h6//a//text()');
-      var wordNodes = select(doc, '//div[contains(@class, "concept_light-representation")][1]//span[@class="text"]//text()');
-      var meaningNodes = select(doc, '//div[contains(@class, "concept_light")][1]//div[contains(@class, "concept_light-meanings")]//span[@class="meaning-meaning"]/text()');
+      var detailsLink = select(doc, '//a[@class="light-details_link"]/@href[1]')[0].value;
 
-      function postMeaningsToSlack(slackResponse, prefix, meaningNodes) {
-        var meaning = '';
-        for (var i = 0; i < meaningNodes.length; ++i) {
-          if (i > 0) {
-            meaning += '\n';
-          }
-
-          meaning += (i + 1) + '. ' + meaningNodes[i];
+      request(detailsLink, function(error, jishoResponse, jishoData) {
+        if (error) {
+          utils.postToSlack(slackResponse, 'What\'s the meaning of ' + word + '? I don\'t know it either!');
+          return;
         }
 
-        utils.postToSlack(slackResponse, prefix + meaning);
-      }
+        var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(jishoData);
+        var textNodes = select(doc, '//div[@class="concept_light-representation"]//span[@class="text"]/node()').filter(function(node) { return node.toString().trim().length != 0 });
+        var meanings = select(doc, '//span[@class="meaning-meaning"]/text()').map(function(node) { return node.toString(); });
 
-      if (inflectionNodes.length > 0) {
-        postMeaningsToSlack(slackResponse, word + ' looks like an inflection of ' + inflectionNodes[0] + '\nIts meanings are:\n', meaningNodes);
-      } else if (meaningNodes.length > 0) {
-        postMeaningsToSlack(slackResponse, wordNodes.map(function(wordNode) { return wordNode.toString().trim(); }).join('') + '\'s meanings are:\n', meaningNodes);
-      } else {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + word + '? I don\'t know it either!');
-      }
+        if (meanings.length > 0) {
+          var meaning = '';
+
+          var inflection = '';
+
+          for (var i = 0; i < textNodes.length; ++i) {
+            var textNode = textNodes[i];
+
+            if (textNode.firstChild) {
+              inflection += textNode.firstChild.data;
+            } else {
+              inflection += textNode.toString().trim();
+            }
+          }
+
+          if (word !== inflection) {
+            meaning += word + ' looks like an inflection of ' + inflection + '\nIts meanings are:\n';
+          } else {
+            meaning += word + '\'s meanings are:\n';
+          }
+
+          for (var i = 0; i < meanings.length; ++i) {
+            if (i > 0) {
+              meaning += '\n';
+            }
+
+            meaning += (i + 1) + '. ' + meanings[i];
+          }
+
+          utils.postToSlack(slackResponse, meaning);
+        } else {
+          utils.postToSlack(slackResponse, 'What\'s the meaning of ' + word + '? I don\'t know it either!');
+        }
+      });
     });
   }
 
