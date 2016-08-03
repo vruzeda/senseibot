@@ -10,6 +10,7 @@
   var wordMeaning = require('./commands/wordMeaning.js');
   var wordReading = require('./commands/wordReading.js');
   var particle = require('./commands/particle.js');
+  var wanikaniStatus = require('./commands/wanikaniStatus.js');  
   var utils = require('./commands/utils.js');
 
   var app = express();
@@ -29,6 +30,7 @@
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word meaning (.*)$/, wordMeaning);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word reading (.*)$/, wordReading);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^particle (.*)$/, particle);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani status (.*)$/, wanikaniStatus);
 
       if (!parsed) {
         utils.postToSlack(slackResponse, '今日は、' + slackRequest.body.user_name + '！ You said: [' + command  + ']');
