@@ -3,4 +3,8 @@
 
 module.exports = {
   SLACK_TOKEN: 'Token to verify if this request came from Slack',
+
+  WANIKANI_KEYS: {
+    'username': 'Wanikani key'
+  }
 };
