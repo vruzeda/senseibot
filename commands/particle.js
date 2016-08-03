@@ -1,43 +1,27 @@
 (function() {
 
-  var request = require('request');
-  var select = require('xpath.js');
-  var DOMParser = require('xmldom').DOMParser;
-
+  var jisho = require('../integrations/jisho.js');
   var utils = require('./utils.js');
 
   function particle(slackRequest, slackResponse, particle) {
-
-    request('http://jisho.org/search/' + encodeURI(particle) + '%20%23particle', function(error, jishoResponse, jishoData) {
+    jisho.getParticleInformation(particle, function(error, particleInformation) {
       if (error) {
         utils.postToSlack(slackResponse, 'What\'s the meaning of ' + particle + '? I don\'t know it either!');
         return;
       }
 
-      var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(jishoData);
+      if (particleInformation.meanings.length > 0) {
+        var meaning = particle + ' means:\n';
 
-      var wordNodes = select(doc, '//div[@class="concept_light clearfix"]');
-
-      if (wordNodes.length > 0) {
-
-        //first result only
-        var meaningNodes = select(wordNodes[0], './/span[@class="meaning-meaning"]/text()');
-
-        if (meaningNodes.length > 0) {
-
-          var meaning = '';
-
-          for (var i = 0; i < meaningNodes.length; ++i) {
-            if (i > 0) {
-              meaning += '\n';
-            }
-            meaning += (i + 1) + '. ' + meaningNodes[i];
+        for (var i = 0; i < particleInformation.meanings.length; ++i) {
+          if (i > 0) {
+            meaning += '\n';
           }
 
-          utils.postToSlack(slackResponse, particle + ' means \n' + meaning);
-        } else {
-          utils.postToSlack(slackResponse, 'What\'s the meaning of ' + particle + '? I don\'t know it either!');
+          meaning += (i + 1) + '. ' + particleInformation.meanings[i];
         }
+
+        utils.postToSlack(slackResponse, meaning);
       } else {
         utils.postToSlack(slackResponse, 'What\'s the meaning of ' + particle + '? I don\'t know it either!');
       }

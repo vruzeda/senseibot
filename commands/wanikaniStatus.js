@@ -1,38 +1,18 @@
 (function() {
 
-  var variables = require('../variables.js');
-
-  var request = require('request');
-  var select = require('xpath.js');
-  var DOMParser = require('xmldom').DOMParser;
-
   var utils = require('./utils.js');
+  var wanikani = require('../integrations/wanikani.js');
 
-  function wanikaniStatus(slackRequest, slackResponse, user) {
-
-    var apikey = variables.WANIKANI_KEYS[user];
-
-    if (!apikey) {
-      utils.postToSlack(slackResponse, 'Username ' + user + ' not in the database');
-      return;
-    }
-
-    var action = 'study-queue';
-
-    request('https://www.wanikani.com/api/user/' + apikey + '/' + action, function(error, wanikaniResponse, wanikaniData) {
+  function wanikaniStatus(slackRequest, slackResponse, username) {
+    wanikani.getStatus(username || slackRequest.body.user_name, function (error, status) {
       if (error) {
-        utils.postToSlack(slackResponse, 'Wanikani returned an error: '+ error.message);
+        utils.postToSlack(slackResponse, 'Uh-oh! Something went wrong: ' + error.message);
         return;
       }
 
-      var data = JSON.parse(wanikaniData);
-      var user = data.user_information;
-      var req = data.requested_information;
+      var statusPost = 'User ' + status.user_information.username + ', level ' + status.user_information.level + ', now has available ' + status.requested_information.lessons_available + ' lessons and ' + status.requested_information.reviews_available + ' reviews';
 
-      var out = 'User ' + user.username + ', level ' + user.level + ', now has available ' + req.lessons_available + ' lessons and ' + req.reviews_available + ' reviews';
-
-      utils.postToSlack(slackResponse, out);
-
+      utils.postToSlack(slackResponse, statusPost);
     });
   }
 
