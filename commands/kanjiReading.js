@@ -11,14 +11,14 @@
       }
 
       if (kanjiInformation.readings.kunYomi.length > 0 || kanjiInformation.readings.onYomi.length > 0) {
-        var readings = kanji + ' readings:\n';
+        var readings = kanji + ' readings:';
 
         if (kanjiInformation.readings.kunYomi.length > 0) {
-          readings += '- Kun-yomi: ' + kanjiInformation.readings.kunYomi.join(', ');
+          readings += '\n- Kun-yomi: ' + kanjiInformation.readings.kunYomi.join(', ');
         }
 
         if (kanjiInformation.readings.onYomi.length > 0) {
-          readings += '- On-yomi: ' + kanjiInformation.readings.onYomi.join(', ');
+          readings += '\n- On-yomi: ' + kanjiInformation.readings.onYomi.join(', ');
         }
 
         utils.postToSlack(slackResponse, readings);
