@@ -101,7 +101,7 @@
         }
 
         var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(data);
-        var meaningNodes = select(doc, '//span[@class="meaning-meaning"]/text()');
+        var meaningNodes = select(doc, '//span[@class="meaning-meaning"][not(span)]/text()');
         var conceptNodes = select(doc, '//div[contains(@class, "concept_light-representation")][1]');
 
         for (var i = 0; i < meaningNodes.length; ++i) {
@@ -110,8 +110,16 @@
         }
 
         if (conceptNodes.length > 0) {
-          var furiganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/node()').filter(function(node) { return node.toString().trim().length != 0 });
+          var rubyFuriganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/ruby[@class="furigana-justify"]/rt');
+          var normalFuriganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/span');
           var textNodes = select(conceptNodes[0], './/span[@class="text"]/node()').filter(function(node) { return node.toString().trim().length != 0 });
+
+          var furiganaNodes;
+          if (rubyFuriganaNodes.length > 0) {
+            furiganaNodes = rubyFuriganaNodes;
+          } else {
+            furiganaNodes = normalFuriganaNodes;
+          }
 
           for (var i = 0; i < textNodes.length; ++i) {
             var textNode = textNodes[i];
