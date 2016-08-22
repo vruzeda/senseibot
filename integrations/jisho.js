@@ -110,24 +110,40 @@
         }
 
         if (conceptNodes.length > 0) {
-          var rubyFuriganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/ruby[@class="furigana-justify"]/rt');
-          var normalFuriganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/span');
-          var textNodes = select(conceptNodes[0], './/span[@class="text"]/node()').filter(function(node) { return node.toString().trim().length != 0 });
-
-          var furiganaNodes;
-          if (rubyFuriganaNodes.length > 0) {
-            furiganaNodes = rubyFuriganaNodes;
-          } else {
-            furiganaNodes = normalFuriganaNodes;
+          var furiganaNodes = [];
+          if (furiganaNodes.length == 0) {
+            furiganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/ruby[@class="furigana-justify"]/rt').reduce(function(furiganaNodes, furiganaNode) {
+              return furiganaNodes.concat(furiganaNode.firstChild.data.split(''));
+            }, []);
           }
+          if (furiganaNodes.length == 0) {
+            furiganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/span').map(function(furiganaNode) {
+              if (furiganaNode.firstChild) {
+                return furiganaNode.firstChild.data;
+              } else {
+                return '';
+              }
+            });
+          }
+
+          var textNodes = select(conceptNodes[0], './/span[@class="text"]/node()').filter(function(textNode) {
+            return textNode.toString().trim().length != 0
+          }).reduce(function(textNodes, textNode) {
+            if (textNode.firstChild) {
+              return textNodes.concat(textNode.firstChild.data.split(''));
+            } else {
+              return textNodes.concat(textNode.toString().trim().split(''));
+            }
+          }, []);
 
           for (var i = 0; i < textNodes.length; ++i) {
             var textNode = textNodes[i];
+            var furiganaNode = furiganaNodes[i];
 
-            if (textNode.firstChild) {
-              wordInformation.reading += textNode.firstChild.data;
+            if (furiganaNode.length == 0) {
+              wordInformation.reading += textNode;
             } else {
-              wordInformation.reading += '[' + textNode.toString().trim() + ':' + furiganaNodes[i].firstChild.data + ']';
+              wordInformation.reading += '[' + textNode + ':' + furiganaNode + ']';
             }
           }
 
