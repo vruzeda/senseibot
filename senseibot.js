@@ -6,13 +6,14 @@
   var variables = require('./variables.js');
 
   var echo = require('./commands/echo.js');
+  var kanjiInformation = require('./commands/kanjiInformation.js');
   var kanjiMeaning = require('./commands/kanjiMeaning.js');
   var kanjiReading = require('./commands/kanjiReading.js');
   var particle = require('./commands/particle.js');
-  var wordMeaning = require('./commands/wordMeaning.js');
-  var wordReading = require('./commands/wordReading.js');
   var wanikaniProgression = require('./commands/wanikaniProgression.js');
   var wanikaniStatus = require('./commands/wanikaniStatus.js');
+  var wordMeaning = require('./commands/wordMeaning.js');
+  var wordReading = require('./commands/wordReading.js');
   var utils = require('./commands/utils.js');
 
   var app = express();
@@ -26,13 +27,14 @@
       var command = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
 
       var parsed = false;
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji info(?:rmation)? (.)$/, kanjiInformation);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji meaning (.)$/, kanjiMeaning);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji reading (.)$/, kanjiReading);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word meaning (.*)$/, wordMeaning);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word reading (.*)$/, wordReading);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^particle (.*)$/, particle);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani progression(?: (.*))?$/, wanikaniProgression);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani status(?: (.*))?$/, wanikaniStatus);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word meaning (.*)$/, wordMeaning);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word reading (.*)$/, wordReading);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^(.*)$/, echo);
     }
   });
