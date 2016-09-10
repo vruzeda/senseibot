@@ -3,9 +3,8 @@
   var fs = require('fs');
   var request = require('request');
 
-  var variables = require('../variables.js');
-
   function performAction(username, action, callback) {
+    var variables = require('../variables.js');
     var apiKey = variables.WANIKANI_KEYS[username];
 
     if (!apiKey) {
