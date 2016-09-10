@@ -4,6 +4,26 @@
   var select = require('xpath.js');
   var DOMParser = require('xmldom').DOMParser;
 
+  function feelingLucky(search, callback) {
+    request('http://jisho.org/search/' + encodeURI(search), function(error, response, data) {
+      if (error) {
+        callback(error, response, data);
+        return;
+      }
+
+      var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(data);
+      var detailsLinkNodes = select(doc, '//a[@class="light-details_link"]/@href[1]');
+
+      if (detailsLinkNodes.length == 0) {
+        callback(new Error('Couldn\'t find anything related to ' + search), response, data);
+        return
+      }
+
+      var detailsLink = detailsLinkNodes[0].value;
+      request(detailsLink, callback);
+    });
+  }
+
   function getKanjiInformation(kanji, callback) {
     request('http://jisho.org/search/' + encodeURI(kanji) + '%20%23kanji', function(error, response, data) {
       if (error) {
@@ -79,87 +99,77 @@
   }
 
   function getWordInformation(word, callback) {
-    request('http://jisho.org/search/' + encodeURI(word), function(error, response, data) {
+    feelingLucky(word, function(error, response, data) {
       if (error) {
         callback(error, undefined);
         return;
       }
 
+      var wordInformation = {
+        meanings: [],
+        reading: '',
+        inflection: ''
+      }
+
       var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(data);
-      var detailsLink = select(doc, '//a[@class="light-details_link"]/@href[1]')[0].value;
+      var meaningNodes = select(doc, '//span[@class="meaning-meaning"][not(span)]/text()');
+      var conceptNodes = select(doc, '//div[contains(@class, "concept_light-representation")][1]');
 
-      request(detailsLink, function(error, response, data) {
-        if (error) {
-          callback(error, undefined);
-          return;
-        }
+      for (var i = 0; i < meaningNodes.length; ++i) {
+        var meaningNode = meaningNodes[i];
+        wordInformation.meanings.push(meaningNode.toString().replace(/\s+/g, ' ').trim());
+      }
 
-        var wordInformation = {
-          meanings: [],
-          reading: '',
-          inflection: ''
-        }
-
-        var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(data);
-        var meaningNodes = select(doc, '//span[@class="meaning-meaning"][not(span)]/text()');
-        var conceptNodes = select(doc, '//div[contains(@class, "concept_light-representation")][1]');
-
-        for (var i = 0; i < meaningNodes.length; ++i) {
-          var meaningNode = meaningNodes[i];
-          wordInformation.meanings.push(meaningNode.toString().replace(/\s+/g, ' ').trim());
-        }
-
-        if (conceptNodes.length > 0) {
-          var furiganaNodes = [];
-          if (furiganaNodes.length == 0) {
-            furiganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/ruby[@class="furigana-justify"]/rt').reduce(function(furiganaNodes, furiganaNode) {
-              return furiganaNodes.concat(furiganaNode.firstChild.data.split(''));
-            }, []);
-          }
-          if (furiganaNodes.length == 0) {
-            furiganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/span').map(function(furiganaNode) {
-              if (furiganaNode.firstChild) {
-                return furiganaNode.firstChild.data;
-              } else {
-                return '';
-              }
-            });
-          }
-
-          var textNodes = select(conceptNodes[0], './/span[@class="text"]/node()').filter(function(textNode) {
-            return textNode.toString().trim().length != 0
-          }).reduce(function(textNodes, textNode) {
-            if (textNode.firstChild) {
-              return textNodes.concat(textNode.firstChild.data.split(''));
-            } else {
-              return textNodes.concat(textNode.toString().trim().split(''));
-            }
+      if (conceptNodes.length > 0) {
+        var furiganaNodes = [];
+        if (furiganaNodes.length == 0) {
+          furiganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/ruby[@class="furigana-justify"]/rt').reduce(function(furiganaNodes, furiganaNode) {
+            return furiganaNodes.concat(furiganaNode.firstChild.data.split(''));
           }, []);
-
-          for (var i = 0; i < textNodes.length; ++i) {
-            var textNode = textNodes[i];
-            var furiganaNode = furiganaNodes[i];
-
-            if (furiganaNode.length == 0) {
-              wordInformation.reading += textNode;
+        }
+        if (furiganaNodes.length == 0) {
+          furiganaNodes = select(conceptNodes[0], './/span[@class="furigana"]/span').map(function(furiganaNode) {
+            if (furiganaNode.firstChild) {
+              return furiganaNode.firstChild.data;
             } else {
-              wordInformation.reading += '[' + textNode + ':' + furiganaNode + ']';
+              return '';
             }
+          });
+        }
+
+        var textNodes = select(conceptNodes[0], './/span[@class="text"]/node()').filter(function(textNode) {
+          return textNode.toString().trim().length != 0
+        }).reduce(function(textNodes, textNode) {
+          if (textNode.firstChild) {
+            return textNodes.concat(textNode.firstChild.data.split(''));
+          } else {
+            return textNodes.concat(textNode.toString().trim().split(''));
           }
+        }, []);
 
-          for (var i = 0; i < textNodes.length; ++i) {
-            var textNode = textNodes[i];
+        for (var i = 0; i < textNodes.length; ++i) {
+          var textNode = textNodes[i];
+          var furiganaNode = furiganaNodes[i];
 
-            if (textNode.firstChild) {
-              wordInformation.inflection += textNode.firstChild.data;
-            } else {
-              wordInformation.inflection += textNode.toString().trim();
-            }
+          if (furiganaNode.length == 0) {
+            wordInformation.reading += textNode;
+          } else {
+            wordInformation.reading += '[' + textNode + ':' + furiganaNode + ']';
           }
         }
 
-        callback(null, wordInformation);
-      });
+        for (var i = 0; i < textNodes.length; ++i) {
+          var textNode = textNodes[i];
+
+          if (textNode.firstChild) {
+            wordInformation.inflection += textNode.firstChild.data;
+          } else {
+            wordInformation.inflection += textNode.toString().trim();
+          }
+        }
+      }
+
+      callback(null, wordInformation);
     });
   }
 
