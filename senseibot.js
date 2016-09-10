@@ -12,6 +12,7 @@
   var particle = require('./commands/particle.js');
   var wanikaniProgression = require('./commands/wanikaniProgression.js');
   var wanikaniStatus = require('./commands/wanikaniStatus.js');
+  var wordInformation = require('./commands/wordInformation.js');
   var wordMeaning = require('./commands/wordMeaning.js');
   var wordReading = require('./commands/wordReading.js');
   var utils = require('./commands/utils.js');
@@ -33,6 +34,7 @@
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^particle (.*)$/, particle);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani progression(?: (.*))?$/, wanikaniProgression);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani status(?: (.*))?$/, wanikaniStatus);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word info(?:rmation)? (.*)$/, wordInformation);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word meaning (.*)$/, wordMeaning);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word reading (.*)$/, wordReading);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^(.*)$/, echo);
