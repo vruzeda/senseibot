@@ -11,14 +11,10 @@
       }
 
       if (particleInformation.meanings.length > 0) {
-        var meaning = particle + ' means:\n';
+        var meaning = particle + '\'s meanings are:';
 
         for (var i = 0; i < particleInformation.meanings.length; ++i) {
-          if (i > 0) {
-            meaning += '\n';
-          }
-
-          meaning += (i + 1) + '. ' + particleInformation.meanings[i];
+          meaning += '\n' + (i + 1) + '. ' + particleInformation.meanings[i];
         }
 
         utils.postToSlack(slackResponse, meaning);

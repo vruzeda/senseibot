@@ -10,21 +10,17 @@
         return;
       }
 
-      var meaning = '';
-
       if (wordInformation.meanings.length > 0) {
+        var meaning = '';
+
         if (word !== wordInformation.inflection) {
-          meaning += word + ' looks like an inflection of ' + wordInformation.inflection + '\nIts meanings are:\n';
+          meaning += word + ' looks like an inflection of ' + wordInformation.inflection + '\nIts meanings are:';
         } else {
-          meaning += word + '\'s meanings are:\n';
+          meaning += word + '\'s meanings are:';
         }
 
         for (var i = 0; i < wordInformation.meanings.length; ++i) {
-          if (i > 0) {
-            meaning += '\n';
-          }
-
-          meaning += (i + 1) + '. ' + wordInformation.meanings[i];
+          meaning += '\n' + (i + 1) + '. ' + wordInformation.meanings[i];
         }
 
         utils.postToSlack(slackResponse, meaning);

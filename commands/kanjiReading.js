@@ -11,7 +11,7 @@
       }
 
       if (kanjiInformation.readings.kunYomi.length > 0 || kanjiInformation.readings.onYomi.length > 0) {
-        var readings = kanji + ' readings:';
+        var readings = kanji + '\'s readings are:';
 
         if (kanjiInformation.readings.kunYomi.length > 0) {
           readings += '\n- Kun-yomi: ' + kanjiInformation.readings.kunYomi.join(', ');

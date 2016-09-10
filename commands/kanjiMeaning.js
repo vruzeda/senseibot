@@ -11,7 +11,13 @@
       }
 
       if (kanjiInformation.meanings.length > 0) {
-        utils.postToSlack(slackResponse, kanji + ' means ' + kanjiInformation.meanings.join(', '));
+        var meaning = kanji + '\'s meanings are:';
+
+        for (var i = 0; i < kanjiInformation.meanings.length; ++i) {
+          meaning += '\n' + (i + 1) + '. ' + kanjiInformation.meanings[i];
+        }
+
+        utils.postToSlack(slackResponse, meaning);
       } else {
         utils.postToSlack(slackResponse, 'What\'s the meaning of ' + kanji + '? I don\'t know it either!');
       }
