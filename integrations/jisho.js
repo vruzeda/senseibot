@@ -106,14 +106,24 @@
       }
 
       var wordInformation = {
+        tags: [],
         meanings: [],
         reading: '',
         inflection: ''
       }
 
       var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(data);
+      var meaningTagNodes = select(doc, '//div[contains(@class, "meaning-tags")][1]/text()');
       var meaningNodes = select(doc, '//span[@class="meaning-meaning"][not(span)]/text()');
       var conceptNodes = select(doc, '//div[contains(@class, "concept_light-representation")][1]');
+
+      if (meaningTagNodes.length > 0) {
+        var meaningTags = meaningTagNodes[0].toString().split(', ').map(function(meaningTag) {
+          return meaningTag.trim();
+        });
+
+        wordInformation.tags = wordInformation.tags.concat(meaningTags);
+      }
 
       for (var i = 0; i < meaningNodes.length; ++i) {
         var meaningNode = meaningNodes[i];
