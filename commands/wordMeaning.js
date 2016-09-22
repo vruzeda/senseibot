@@ -14,7 +14,7 @@
         var meaning = '';
 
         if (word !== wordInformation.inflection) {
-          meaning += word + ' looks like an inflection of ' + wordInformation.inflection + '\nIts meanings are:';
+          meaning += word + ' looks like an inflection of ' + wordInformation.inflection + '. Its meanings are:';
         } else {
           meaning += word + '\'s meanings are:';
         }
