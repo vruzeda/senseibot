@@ -13,9 +13,11 @@
       if (kanjiInformation.meanings.length > 0) {
         var meaning = kanji + '\'s meanings are:';
 
+        meaning += '\n```';
         for (var i = 0; i < kanjiInformation.meanings.length; ++i) {
           meaning += '\n' + (i + 1) + '. ' + kanjiInformation.meanings[i];
         }
+        meaning += '\n```';
 
         utils.postToSlack(slackResponse, meaning);
       } else {

@@ -19,9 +19,11 @@
           meaning += word + '\'s meanings are:';
         }
 
+        meaning += '\n```';
         for (var i = 0; i < wordInformation.meanings.length; ++i) {
           meaning += '\n' + (i + 1) + '. ' + wordInformation.meanings[i];
         }
+        meaning += '\n```';
 
         utils.postToSlack(slackResponse, meaning);
       } else {

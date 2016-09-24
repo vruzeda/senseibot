@@ -13,9 +13,11 @@
       if (particleInformation.meanings.length > 0) {
         var meaning = particle + '\'s meanings are:';
 
+        meaning += '\n```';
         for (var i = 0; i < particleInformation.meanings.length; ++i) {
           meaning += '\n' + (i + 1) + '. ' + particleInformation.meanings[i];
         }
+        meaning += '\n```';
 
         utils.postToSlack(slackResponse, meaning);
       } else {

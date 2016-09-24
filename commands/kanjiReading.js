@@ -13,13 +13,14 @@
       if (kanjiInformation.readings.kunYomi.length > 0 || kanjiInformation.readings.onYomi.length > 0) {
         var readings = kanji + '\'s readings are:';
 
+        readings += '\n```';
         if (kanjiInformation.readings.kunYomi.length > 0) {
           readings += '\n- Kun-yomi: ' + kanjiInformation.readings.kunYomi.join(', ');
         }
-
         if (kanjiInformation.readings.onYomi.length > 0) {
           readings += '\n- On-yomi: ' + kanjiInformation.readings.onYomi.join(', ');
         }
+        readings += '\n```';
 
         utils.postToSlack(slackResponse, readings);
       } else {

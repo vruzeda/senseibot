@@ -14,10 +14,12 @@
         var reading = '';
 
         if (word !== wordInformation.inflection) {
-          reading += word + ' looks like an inflection of ' + wordInformation.inflection + '\nIts reading is ' + wordInformation.reading;
+          reading += word + ' looks like an inflection of ' + wordInformation.inflection + '\nIts reading is:';
         } else {
-          reading += word + '\'s reading is ' + wordInformation.reading;
+          reading += word + '\'s reading is:';
         }
+
+        reading += '\n```\n' + wordInformation.reading + '\n```';
 
         utils.postToSlack(slackResponse, reading);
       } else {
