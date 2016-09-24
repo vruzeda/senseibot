@@ -41,6 +41,7 @@
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word meaning (.*)$/, wordMeaning);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word reading (.*)$/, wordReading);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^help$/, help);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^(.*)$/, help);
     }
   });
 
