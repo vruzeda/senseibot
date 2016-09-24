@@ -1,40 +1,49 @@
 (function() {
 
   var jisho = require('../integrations/jisho.js');
-  var utils = require('./utils.js');
 
-  function kanjiInformation(slackRequest, slackResponse, kanji) {
+  function kanjiInformation(callback, kanji) {
     jisho.getKanjiInformation(kanji, function(error, kanjiInformation) {
       if (error) {
-        utils.postToSlack(slackResponse, 'Do you want information on ' + kanji + '? I don\'t know that either!');
+        callback('Do you want information on ' + kanji + '? I don\'t know that either!');
         return;
       }
 
       if (kanjiInformation.meanings.length > 0 && (kanjiInformation.readings.kunYomi.length > 0 || kanjiInformation.readings.onYomi.length > 0)) {
-        var information = 'Here\'s the information I got on ' + kanji + ':\n';
-
         var meaning = 'Its meanings are:';
+
+        meaning += '\n```';
         for (var i = 0; i < kanjiInformation.meanings.length; ++i) {
           meaning += '\n' + (i + 1) + '. ' + kanjiInformation.meanings[i];
         }
-        information += meaning + '\n\n';
+        meaning += '\n```';
 
         var readings = 'Its readings are:';
+
+        readings += '\n```';
         if (kanjiInformation.readings.kunYomi.length > 0) {
           readings += '\n- Kun-yomi: ' + kanjiInformation.readings.kunYomi.join(', ');
         }
         if (kanjiInformation.readings.onYomi.length > 0) {
           readings += '\n- On-yomi: ' + kanjiInformation.readings.onYomi.join(', ');
         }
+        readings += '\n```'
+
+        var information = 'Here\'s the information I got on ' + kanji + ':\n';
+        information += meaning + '\n\n';
         information += readings;
 
-        utils.postToSlack(slackResponse, information);
+        callback(information);
       } else {
-        utils.postToSlack(slackResponse, 'Do you want information on ' + kanji + '? I don\'t know that either!');
+        callback('Do you want information on ' + kanji + '? I don\'t know that either!');
       }
     });
   }
 
-  module.exports = kanjiInformation;
+  module.exports = {
+    pattern: /^kanji info(?:rmation)? (.)$/,
+    handler: kanjiInformation,
+    description: '*senseibot kanji information &lt;kanji&gt;* : returns the meaning and the reading of the kanji'
+  };
 
 }());

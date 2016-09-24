@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
+    "@slack/client": "^3.6.0",
     "async": "^2.0.1",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "request": "^2.73.0",
-    "underscore": "^1.8.3",
     "xmldom": "^0.1.22",
     "xpath.js": "^1.0.6"
   }

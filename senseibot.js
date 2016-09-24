@@ -2,22 +2,10 @@
 
   var bodyParser = require('body-parser');
   var express = require('express');
+  var slack = require('@slack/client');
 
   var variables = require('./variables.js');
-
-  var echo = require('./commands/echo.js');
-  var help = require('./commands/help.js');
-  var kanjiInformation = require('./commands/kanjiInformation.js');
-  var kanjiMeaning = require('./commands/kanjiMeaning.js');
-  var kanjiReading = require('./commands/kanjiReading.js');
-  var particle = require('./commands/particle.js');
-  var sentence = require('./commands/sentence.js');
-  var wanikaniProgression = require('./commands/wanikaniProgression.js');
-  var wanikaniStatus = require('./commands/wanikaniStatus.js');
-  var wordInformation = require('./commands/wordInformation.js');
-  var wordMeaning = require('./commands/wordMeaning.js');
-  var wordReading = require('./commands/wordReading.js');
-  var utils = require('./commands/utils.js');
+  var parseCommand = require('./commands/parseCommand.js');
 
   var app = express();
 
@@ -25,30 +13,36 @@
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.text());
 
-  app.post('/trigger', function (slackRequest, slackResponse) {
-	  
+  app.post('/trigger', function(slackRequest, slackResponse) {
     if (slackRequest.body.token === variables.SLACK_TOKEN) {
-      var command = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
-
-      var parsed = false;
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji info(?:rmation)? (.)$/, kanjiInformation);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji meaning (.)$/, kanjiMeaning);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji reading (.)$/, kanjiReading);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^particle (.*)$/, particle);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^sentence (.*)$/, sentence);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani progression(?: (.*))?$/, wanikaniProgression);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani status(?: (.*))?$/, wanikaniStatus);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word info(?:rmation)? (.*)$/, wordInformation);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word meaning (.*)$/, wordMeaning);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word reading (.*)$/, wordReading);
-	  parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^help$/, help);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^(.*)$/, echo);
+      var userCommand = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
+      parseCommand(function(response) {
+        slackResponse.send('{"text": ' + JSON.stringify(response) + '}');
+      }, userCommand);
     }
   });
 
-  app.listen(7001, function () {
+  app.listen(7001, function() {
     console.log('senseibot app listening on port 7001!');
     console.log('variables: ' + JSON.stringify(variables));
   });
+
+  var rtm = new slack.RtmClient(variables.SLACK_API_TOKEN);
+
+  rtm.on(slack.CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
+    rtm.startData = rtmStartData;
+    console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}`);
+  });
+
+  rtm.on(slack.RTM_EVENTS.MESSAGE, function(message) {
+    if (message.type === 'message' && message.text.indexOf(`<@${rtm.startData.self.id}>`) == 0) {
+      var userCommand = message.text.substr(`<@${rtm.startData.self.id}>`.length).replace(/\s+/g, ' ').trim();
+      parseCommand(function(response) {
+        rtm.sendMessage(response, message.channel);
+      }, userCommand);
+    }
+  });
+
+  rtm.start();
 
 }());

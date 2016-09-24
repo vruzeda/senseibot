@@ -182,7 +182,7 @@
       callback(null, wordInformation);
     });
   }
-  
+
   function getSentenceBreakdown(sentence, callback) {
     request('http://jisho.org/search/' + encodeURI(sentence), function(error, response, data) {
       if (error) {
@@ -192,33 +192,33 @@
 
       var sentenceBreakdown = {
         words: [],
-		urls: []
+        urls: []
       };
 
       var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(data);
       //looking for the section with the sentence breakdown
-	  var zenbar = select(doc, '//section[@id="zen_bar"]');
+      var zenbar = select(doc, '//section[@id="zen_bar"]');
 
       if (zenbar.length > 0) {
-		//getting each item from the section
+        //getting each item from the section
         var words = select(zenbar[0], './/li[@class="clearfix"]');
-		
+
         for (var i = 0; i < words.length; ++i) {
           var wordLi = words[i];
-		  
+
           sentenceBreakdown.words.push(wordLi);
         }
       }
 
       callback(null, sentenceBreakdown);
     });
-  }  
+  }
 
   module.exports = {
     getKanjiInformation: getKanjiInformation,
     getParticleInformation: getParticleInformation,
     getWordInformation: getWordInformation,
-	getSentenceBreakdown: getSentenceBreakdown
+    getSentenceBreakdown: getSentenceBreakdown
   };
 
 })();

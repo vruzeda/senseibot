@@ -1,12 +1,11 @@
 (function() {
 
   var jisho = require('../integrations/jisho.js');
-  var utils = require('./utils.js');
 
-  function wordMeaning(slackRequest, slackResponse, word) {
+  function wordMeaning(callback, word) {
     jisho.getWordInformation(word, function(error, wordInformation) {
       if (error) {
-        utils.postToSlack(slackResponse, 'What\'s the reading of ' + word + '? I don\'t know it either!');
+        callback('What\'s the reading of ' + word + '? I don\'t know it either!');
         return;
       }
 
@@ -14,18 +13,24 @@
         var reading = '';
 
         if (word !== wordInformation.inflection) {
-          reading += word + ' looks like an inflection of ' + wordInformation.inflection + '\nIts reading is ' + wordInformation.reading;
+          reading += word + ' looks like an inflection of ' + wordInformation.inflection + '\nIts reading is:';
         } else {
-          reading += word + '\'s reading is ' + wordInformation.reading;
+          reading += word + '\'s reading is:';
         }
 
-        utils.postToSlack(slackResponse, reading);
+        reading += '\n```\n' + wordInformation.reading + '\n```';
+
+        callback(reading);
       } else {
-        utils.postToSlack(slackResponse, 'What\'s the reading of ' + word + '? I don\'t know it either!');
+        callback('What\'s the reading of ' + word + '? I don\'t know it either!');
       }
     });
   }
 
-  module.exports = wordMeaning;
+  module.exports = {
+    pattern: /^word reading (.*)$/,
+    handler: wordMeaning,
+    description: '*senseibot word reading &lt;word&gt;* : returns only the reading of the word'
+  };
 
 }());
