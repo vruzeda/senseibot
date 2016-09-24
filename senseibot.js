@@ -5,7 +5,6 @@
 
   var variables = require('./variables.js');
 
-  var echo = require('./commands/echo.js');
   var help = require('./commands/help.js');
   var kanjiInformation = require('./commands/kanjiInformation.js');
   var kanjiMeaning = require('./commands/kanjiMeaning.js');
@@ -26,7 +25,7 @@
   app.use(bodyParser.text());
 
   app.post('/trigger', function (slackRequest, slackResponse) {
-	  
+
     if (slackRequest.body.token === variables.SLACK_TOKEN) {
       var command = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
 
@@ -41,8 +40,7 @@
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word info(?:rmation)? (.*)$/, wordInformation);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word meaning (.*)$/, wordMeaning);
       parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word reading (.*)$/, wordReading);
-	  parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^help$/, help);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^(.*)$/, echo);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^help$/, help);
     }
   });
 
