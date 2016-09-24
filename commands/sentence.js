@@ -127,6 +127,10 @@
     });
   }
 
-  module.exports = sentence;
+  module.exports = {
+    pattern: /^sentence (.*)$/,
+    handler: sentence,
+    description: '*senseibot sentence &lt;sentence&gt;* : returns the meaning of each word in the sentence'
+  };
 
 }());

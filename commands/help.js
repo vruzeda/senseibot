@@ -27,6 +27,10 @@
     utils.postToSlack(slackResponse, help);
   }
 
-  module.exports = help;
+  module.exports = {
+    pattern: /^help$/,
+    handler: help,
+    description: '*senseibot help* : shows a list of valid commands'
+  };
 
 })();

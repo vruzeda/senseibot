@@ -28,6 +28,10 @@
     });
   }
 
-  module.exports = kanjiReading;
+  module.exports = {
+    pattern: /^kanji reading (.)$/,
+    handler: kanjiReading,
+    description: '*senseibot kanji reading &lt;kanji&gt;* : returns only the reading of the kanji'
+  };
 
 }());

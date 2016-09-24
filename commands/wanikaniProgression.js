@@ -18,6 +18,10 @@
     });
   }
 
-  module.exports = wanikaniProgression;
+  module.exports = {
+    pattern: /^wanikani progression(?: (.*))?$/,
+    handler: wanikaniProgression,
+    description: '*senseibot wanikani progression [username]* : returns the wanikani level of the user and the % of completion on radicals and kanjis'
+  };
 
 })();

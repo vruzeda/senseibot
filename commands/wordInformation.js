@@ -45,6 +45,10 @@
     });
   }
 
-  module.exports = wordInformation;
+  module.exports = {
+    pattern: /^word info(?:rmation)? (.*)$/,
+    handler: wordInformation,
+    description: '*senseibot word information &lt;word&gt;* : returns the meaning and reading of the word'
+  };
 
 }());

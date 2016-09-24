@@ -35,6 +35,10 @@
     });
   }
 
-  module.exports = kanjiInformation;
+  module.exports = {
+    pattern: /^kanji info(?:rmation)? (.)$/,
+    handler: kanjiInformation,
+    description: '*senseibot kanji information &lt;kanji&gt;* : returns the meaning and the reading of the kanji'
+  };
 
 }());

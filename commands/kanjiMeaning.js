@@ -24,6 +24,10 @@
     });
   }
 
-  module.exports = kanjiMeaning;
+  module.exports = {
+    pattern: /^kanji meaning (.)$/,
+    handler: kanjiMeaning,
+    description: '*senseibot kanji meaning &lt;kanji&gt;* : returns only the meaning of the kanji'
+  };
 
 }());

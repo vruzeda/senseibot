@@ -30,6 +30,10 @@
     });
   }
 
-  module.exports = wordMeaning;
+  module.exports = {
+    pattern: /^word meaning (.*)$/,
+    handler: wordMeaning,
+    description: '*senseibot word meaning &lt;word&gt;* : returns only the meaning of the word'
+  };
 
 }());

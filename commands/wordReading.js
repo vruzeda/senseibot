@@ -26,6 +26,10 @@
     });
   }
 
-  module.exports = wordMeaning;
+  module.exports = {
+    pattern: /^word reading (.*)$/,
+    handler: wordMeaning,
+    description: '*senseibot word reading &lt;word&gt;* : returns only the reading of the word'
+  };
 
 }());

@@ -16,6 +16,10 @@
     });
   }
 
-  module.exports = wanikaniStatus;
+  module.exports = {
+    pattern: /^wanikani status(?: (.*))?$/,
+    handler: wanikaniStatus,
+    description: '*senseibot wanikani status [username]* : returns the wanikani level of the user and the number of available lessons/reviews'
+  };
 
 }());

@@ -30,18 +30,18 @@
       var command = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
 
       var parsed = false;
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji info(?:rmation)? (.)$/, kanjiInformation);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji meaning (.)$/, kanjiMeaning);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^kanji reading (.)$/, kanjiReading);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^particle (.*)$/, particle);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^sentence (.*)$/, sentence);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani progression(?: (.*))?$/, wanikaniProgression);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^wanikani status(?: (.*))?$/, wanikaniStatus);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word info(?:rmation)? (.*)$/, wordInformation);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word meaning (.*)$/, wordMeaning);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^word reading (.*)$/, wordReading);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^help$/, help);
-      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^(.*)$/, help);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, kanjiInformation.pattern, kanjiInformation.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, kanjiMeaning.pattern, kanjiMeaning.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, kanjiReading.pattern, kanjiReading.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, particle.pattern, particle.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, sentence.pattern, sentence.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, wanikaniProgression.pattern, wanikaniProgression.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, wanikaniStatus.pattern, wanikaniStatus.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, wordInformation.pattern, wordInformation.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, wordMeaning.pattern, wordMeaning.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, wordReading.pattern, wordReading.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, help.pattern, help.handler);
+      parsed = parsed || utils.parseCommand(slackRequest, slackResponse, command, /^(.*)$/, help.handler);
     }
   });
 

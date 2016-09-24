@@ -24,6 +24,10 @@
     });
   }
 
-  module.exports = particle;
+  module.exports = {
+    pattern: /^particle (.*)$/,
+    handler: particle,
+    description: '*senseibot particle &lt;particle&gt;* : returns the meaning of the particle'
+  };
 
 }());
