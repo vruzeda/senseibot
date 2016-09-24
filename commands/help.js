@@ -1,8 +1,6 @@
 (function() {
 
-  var utils = require('./utils.js');
-
-  function help(slackRequest, slackResponse, invalidCommand) {
+  function help(callback, invalidCommand) {
     var help;
 
     if (invalidCommand) {
@@ -16,7 +14,7 @@
       help += commands[i].description + '\n';
     }
 
-    utils.postToSlack(slackResponse, help);
+    callback(help);
   }
 
   module.exports = {

@@ -1,12 +1,11 @@
 (function() {
 
   var jisho = require('../integrations/jisho.js');
-  var utils = require('./utils.js');
 
-  function kanjiReading(slackRequest, slackResponse, kanji) {
+  function kanjiReading(callback, kanji) {
     jisho.getKanjiInformation(kanji, function(error, kanjiInformation) {
       if (error) {
-        utils.postToSlack(slackResponse, 'What\'s the reading of ' + kanji + '? I don\'t know it either!');
+        callback('What\'s the reading of ' + kanji + '? I don\'t know it either!');
         return;
       }
 
@@ -22,9 +21,9 @@
         }
         readings += '\n```';
 
-        utils.postToSlack(slackResponse, readings);
+        callback(readings);
       } else {
-        utils.postToSlack(slackResponse, 'What\'s the reading of ' + kanji + '? I don\'t know it either!');
+        callback('What\'s the reading of ' + kanji + '? I don\'t know it either!');
       }
     });
   }

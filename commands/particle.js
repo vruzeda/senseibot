@@ -1,12 +1,11 @@
 (function() {
 
   var jisho = require('../integrations/jisho.js');
-  var utils = require('./utils.js');
 
-  function particle(slackRequest, slackResponse, particle) {
+  function particle(callback, particle) {
     jisho.getParticleInformation(particle, function(error, particleInformation) {
       if (error) {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + particle + '? I don\'t know it either!');
+        callback('What\'s the meaning of ' + particle + '? I don\'t know it either!');
         return;
       }
 
@@ -19,9 +18,9 @@
         }
         meaning += '\n```';
 
-        utils.postToSlack(slackResponse, meaning);
+        callback(meaning);
       } else {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + particle + '? I don\'t know it either!');
+        callback('What\'s the meaning of ' + particle + '? I don\'t know it either!');
       }
     });
   }

@@ -4,7 +4,6 @@
   var express = require('express');
 
   var variables = require('./variables.js');
-
   var parseCommand = require('./commands/parseCommand.js');
 
   var app = express();
@@ -15,7 +14,10 @@
 
   app.post('/trigger', function (slackRequest, slackResponse) {
     if (slackRequest.body.token === variables.SLACK_TOKEN) {
-      parseCommand(slackRequest, slackResponse);
+      var userCommand = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
+      parseCommand(function(response) {
+        slackResponse.send('{"text": ' + JSON.stringify(response) + '}');
+      }, userCommand);
     }
   });
 

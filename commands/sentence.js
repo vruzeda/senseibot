@@ -3,15 +3,12 @@
   var select = require('xpath.js');
   var async = require('async');
 
-  var wordMeaning = require('./wordMeaning.js');
-
   var jisho = require('../integrations/jisho.js');
-  var utils = require('./utils.js');
 
-  function sentence(slackRequest, slackResponse, sentence) {
+  function sentence(callback, sentence) {
     jisho.getSentenceBreakdown(sentence, function(error, sentenceInformation) {
       if (error) {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + sentence + '? I don\'t know it either!');
+        callback('What\'s the meaning of ' + sentence + '? I don\'t know it either!');
         return;
       }
 
@@ -109,7 +106,7 @@
         async.parallel(calls, function(error, result) {
           //if there was an error in any of the async requests
           if (error){
-            utils.postToSlack(slackResponse, 'What\'s the meaning of ' + sentence + '? I don\'t know it either!');
+            callback('What\'s the meaning of ' + sentence + '? I don\'t know it either!');
             return;
           }
 
@@ -118,11 +115,11 @@
             words += '\n';
           }
 
-          utils.postToSlack(slackResponse, words);
+          callback(words);
         });
 
       } else {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + sentence + '? I don\'t know it either!');
+        callback('What\'s the meaning of ' + sentence + '? I don\'t know it either!');
       }
     });
   }

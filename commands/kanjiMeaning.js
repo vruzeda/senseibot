@@ -1,12 +1,11 @@
 (function() {
 
   var jisho = require('../integrations/jisho.js');
-  var utils = require('./utils.js');
 
-  function kanjiMeaning(slackRequest, slackResponse, kanji) {
+  function kanjiMeaning(callback, kanji) {
     jisho.getKanjiInformation(kanji, function(error, kanjiInformation) {
       if (error) {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + kanji + '? I don\'t know it either!');
+        callback('What\'s the meaning of ' + kanji + '? I don\'t know it either!');
         return;
       }
 
@@ -19,9 +18,9 @@
         }
         meaning += '\n```';
 
-        utils.postToSlack(slackResponse, meaning);
+        callback(meaning);
       } else {
-        utils.postToSlack(slackResponse, 'What\'s the meaning of ' + kanji + '? I don\'t know it either!');
+        callback('What\'s the meaning of ' + kanji + '? I don\'t know it either!');
       }
     });
   }

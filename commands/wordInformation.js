@@ -1,12 +1,11 @@
 (function() {
 
   var jisho = require('../integrations/jisho.js');
-  var utils = require('./utils.js');
 
-  function wordInformation(slackRequest, slackResponse, word) {
+  function wordInformation(callback, word) {
     jisho.getWordInformation(word, function(error, wordInformation) {
       if (error) {
-        utils.postToSlack(slackResponse, 'Do you want information on ' + word + '? I don\'t know that either!');
+        callback('Do you want information on ' + word + '? I don\'t know that either!');
         return;
       }
 
@@ -48,9 +47,9 @@
         information += meaning + '\n\n';
         information += reading;
 
-        utils.postToSlack(slackResponse, information);
+        callback(information);
       } else {
-        utils.postToSlack(slackResponse, 'Do you want information on ' + word + '? I don\'t know that either!');
+        callback('Do you want information on ' + word + '? I don\'t know that either!');
       }
     });
   }
