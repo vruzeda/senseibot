@@ -2,7 +2,6 @@
 
   var select = require('xpath.js');
   var async = require('async');
-  var underscore = require('underscore');
 
   var wordMeaning = require('./wordMeaning.js');
 
@@ -43,7 +42,7 @@
             words += '[' + word + '] ';
 
             //checking if word already was processed
-            if ( underscore.contains(alreadyProcessedWords,word) ){
+            if (alreadyProcessedWords.indexOf(word) >= 0) {
               //it was, so we don't jisho search for it
               continue;
             }
