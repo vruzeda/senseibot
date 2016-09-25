@@ -35,7 +35,7 @@
   });
 
   rtm.on(slack.RTM_EVENTS.MESSAGE, function(message) {
-    if (message.type === 'message' && message.text.indexOf(`<@${rtm.startData.self.id}>`) == 0) {
+    if (message.type === 'message' && message.text && message.text.indexOf(`<@${rtm.startData.self.id}>`) == 0) {
       var userCommand = message.text.substr(`<@${rtm.startData.self.id}>`.length).replace(/\s+/g, ' ').trim();
       parseCommand(function(response) {
         rtm.sendMessage(response, message.channel);
