@@ -1,8 +1,21 @@
 (function() {
 
+  /*** Memory usage inspection ***/
+  var util = require('util');
+
+  function printMemoryFootprint() {
+    console.log(`[${new Date().toISOString()}] MEMORY_USAGE: ${util.inspect(process.memoryUsage())}`);
+  }
+
+  printMemoryFootprint();
+  setInterval(printMemoryFootprint, 5 * 1000);
+  /*** Memory usage inspection ***/
+
+
+
   var bodyParser = require('body-parser');
   var express = require('express');
-  // var slack = require('@slack/client');
+  var slack = require('@slack/client');
 
   var variables = require('./variables.js');
   var parseCommand = require('./commands/parseCommand.js');
@@ -27,72 +40,26 @@
     console.log('variables: ' + JSON.stringify(variables));
   });
 
-  // var rtm = new slack.RtmClient(variables.SLACK_API_TOKEN);
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
-  //   rtm.startData = rtmStartData;
-  //   console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}`);
-  // });
-  //
-  // rtm.on(slack.RTM_EVENTS.MESSAGE, function(message) {
-  //
-  //   if (message.type === 'message') {
-  //     var text = (message.subtype === 'message_changed') ? message.message.text : message.text;
-  //     if (text && text.indexOf(`<@${rtm.startData.self.id}>`) == 0) {
-  //       var userCommand = text.substr(`<@${rtm.startData.self.id}>`.length).replace(/\s+/g, ' ').trim();
-  //       parseCommand(function(response) {
-  //         rtm.sendMessage(response, message.channel);
-  //       }, userCommand);
-  //     }
-  //   }
-  // });
-  //
-  // // HERE FOR DEBUG PURPOSES:
-  //
-  // rtm.on(slack.CLIENT_EVENTS.WEB.RATE_LIMITED, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.CONNECTING, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.WS_OPENING, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.WS_OPENED, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.DISCONNECT, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.UNABLE_TO_RTM_START, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.WS_CLOSE, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.WS_ERROR, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.ATTEMPTING_RECONNECT, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.on(slack.CLIENT_EVENTS.RTM.RAW_MESSAGE, function() {
-  //   // Do nothing!
-  // });
-  //
-  // rtm.start();
+  var rtm = new slack.RtmClient(variables.SLACK_API_TOKEN);
+
+  rtm.on(slack.CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
+    rtm.startData = rtmStartData;
+    console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}`);
+  });
+
+  rtm.on(slack.RTM_EVENTS.MESSAGE, function(message) {
+
+    if (message.type === 'message') {
+      var text = (message.subtype === 'message_changed') ? message.message.text : message.text;
+      if (text && text.indexOf(`<@${rtm.startData.self.id}>`) == 0) {
+        var userCommand = text.substr(`<@${rtm.startData.self.id}>`.length).replace(/\s+/g, ' ').trim();
+        parseCommand(function(response) {
+          rtm.sendMessage(response, message.channel);
+        }, userCommand);
+      }
+    }
+  });
+
+  rtm.start();
 
 }());
