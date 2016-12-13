@@ -4,7 +4,7 @@
     require('./kanjiInformation.js'),
     require('./kanjiMeaning.js'),
     require('./kanjiReading.js'),
-	require('./kanjiStroke.js'),
+    require('./kanjiStroke.js'),
     require('./particle.js'),
     require('./sentence.js'),
     require('./wanikaniProgression.js'),

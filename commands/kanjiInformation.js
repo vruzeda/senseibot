@@ -28,11 +28,11 @@
           readings += '\n- On-yomi: ' + kanjiInformation.readings.onYomi.join(', ');
         }
         readings += '\n```'
-		
-		var stroke = '';
-		if (kanjiInformation.stroke != undefined) {
-			stroke = ' (' + kanjiInformation.stroke + ' strokes)';
-		}
+
+        var stroke = '';
+        if (kanjiInformation.stroke != undefined) {
+          stroke = ' (' + kanjiInformation.stroke + ' strokes)';
+        }
 
         var information = 'Here\'s the information I got on ' + kanji + stroke +':\n';
         information += meaning + '\n\n';

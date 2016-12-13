@@ -4,57 +4,53 @@
   var async = require('async');
 
   function kanjiStroke(callback, kanji) {
-	  
-	var kanjiList = kanji.split(' ');
-	var calls = [];
-	
-	for (var i = 0; i < kanjiList.length; ++i) {
-		
-		//encapsulating all this into a function so the jisho search calls keep the word value of this iteration
-        //particle needs a specific search or else it's confused with simple kanjis
-        (function(currentKanji){
+    var kanjiList = kanji.split(' ');
+    var calls = [];
 
-          //adding all separate word calls to an array to be called later
-          calls.push(function(callback){
+    for (var i = 0; i < kanjiList.length; ++i) {
 
-            var strokeResult = '';
+      // encapsulating all this into a function so the jisho search calls keep the word value of this iteration
+      // particle needs a specific search or else it's confused with simple kanjis
+      (function(currentKanji) {
 
-            var jishoCallbackFunction = function(error, kanjiInformation) {
+        // adding all separate word calls to an array to be called later
+        calls.push(function(callback) {
+          var strokeResult = '';
 
-				if (error) {
-					callback(error, '');
-					return;
-				}
-				  
-				if (kanjiInformation.stroke != undefined) {
-					strokeResult = currentKanji + ' has ' + kanjiInformation.stroke + ' strokes';
-				} 
-				
-				callback(null, strokeResult);
-				
-            };
+          var jishoCallbackFunction = function(error, kanjiInformation) {
+            if (error) {
+              callback(error, '');
+              return;
+            }
 
-            //obtaining kanji information
-            jisho.getKanjiInformation(currentKanji, jishoCallbackFunction);
-          });
-        })(kanjiList[i]);
-	}
-	
-	strokes = '';
-	
-	async.parallel(calls, function(error, result) {
-		//if there was an error in any of the async requests
-		if (error){
-			callback('What\'s the stroke count of ' + kanji + '? I don\'t know it either!');
-			return;
-		}
-	
-		for (var i = 0; i < result.length; i++){
-			strokes += result[i];
-			strokes += '\n';
-		}
+            if (kanjiInformation.stroke != undefined) {
+              strokeResult = currentKanji + ' has ' + kanjiInformation.stroke + ' strokes';
+            }
 
-		callback(strokes);
+            callback(null, strokeResult);
+          };
+
+          // obtaining kanji information
+          jisho.getKanjiInformation(currentKanji, jishoCallbackFunction);
+        });
+      })(kanjiList[i]);
+    }
+
+    strokes = '';
+
+    async.parallel(calls, function(error, result) {
+      // if there was an error in any of the async requests
+      if (error) {
+        callback('What\'s the stroke count of ' + kanji + '? I don\'t know it either!');
+        return;
+      }
+
+      for (var i = 0; i < result.length; i++) {
+        strokes += result[i];
+        strokes += '\n';
+      }
+
+      callback(strokes);
     });
 
   }

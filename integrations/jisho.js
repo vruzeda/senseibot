@@ -37,14 +37,14 @@
           kunYomi: [],
           onYomi: []
         },
-		stroke: ''
+        stroke: ''
       };
 
       var doc = new DOMParser({errorHandler: {warning: null}}).parseFromString(data);
       var meaningNodes = select(doc, '//div[@class="kanji-details__main-meanings"]');
       var readingNodes = select(doc, '//div[@class="kanji-details__main-readings"]');
-	  var strokeNodes = select(doc, '//div[@class="kanji-details__stroke_count"]/strong');
-	  
+      var strokeNodes = select(doc, '//div[@class="kanji-details__stroke_count"]/strong');
+
       if (meaningNodes.length > 0) {
         var meaningNodes = select(meaningNodes[0], './text()');
 
@@ -68,10 +68,10 @@
           kanjiInformation.readings.onYomi.push(onYomiNode.data.replace(/\s+/g, ' ').trim());
         }
       }
-	  
-	  if (strokeNodes.length > 0) {
-		kanjiInformation.stroke = select(strokeNodes[0], './text()').toString();
-	  }
+
+      if (strokeNodes.length > 0) {
+        kanjiInformation.stroke = select(strokeNodes[0], './text()').toString();
+      }
 
       callback(null, kanjiInformation);
     });
