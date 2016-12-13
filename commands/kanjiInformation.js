@@ -28,8 +28,13 @@
           readings += '\n- On-yomi: ' + kanjiInformation.readings.onYomi.join(', ');
         }
         readings += '\n```'
+		
+		var stroke = '';
+		if (kanjiInformation.stroke != undefined) {
+			stroke = ' (' + kanjiInformation.stroke + ' strokes)';
+		}
 
-        var information = 'Here\'s the information I got on ' + kanji + ':\n';
+        var information = 'Here\'s the information I got on ' + kanji + stroke +':\n';
         information += meaning + '\n\n';
         information += readings;
 
@@ -43,7 +48,7 @@
   module.exports = {
     pattern: /^kanji info(?:rmation)? (.)$/,
     handler: kanjiInformation,
-    description: '*senseibot kanji information &lt;kanji&gt;* : returns the meaning and the reading of the kanji'
+    description: '*senseibot kanji information &lt;kanji&gt;* : returns the stroke count, meaning and reading of the kanji'
   };
 
 }());
