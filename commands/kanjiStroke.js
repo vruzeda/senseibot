@@ -24,7 +24,7 @@
             }
 
             if (kanjiInformation.stroke != undefined) {
-              strokeResult = currentKanji + ' has ' + kanjiInformation.stroke + ' strokes';
+              strokeResult = `${currentKanji} has ${kanjiInformation.stroke} strokes`;
             }
 
             callback(null, strokeResult);
@@ -41,7 +41,7 @@
     async.parallel(calls, function(error, result) {
       // if there was an error in any of the async requests
       if (error) {
-        callback('What\'s the stroke count of ' + kanji + '? I don\'t know it either!');
+        callback(`What\'s the stroke count of ${kanji}? I don\'t know it either!`);
         return;
       }
 

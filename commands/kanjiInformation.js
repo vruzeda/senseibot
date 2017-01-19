@@ -5,7 +5,7 @@
   function kanjiInformation(message, callback, kanji) {
     jisho.getKanjiInformation(kanji, function(error, kanjiInformation) {
       if (error) {
-        callback('Do you want information on ' + kanji + '? I don\'t know that either!');
+        callback(`Do you want information on ${kanji}? I don\'t know that either!`);
         return;
       }
 
@@ -14,7 +14,7 @@
 
         meaning += '\n```';
         for (var i = 0; i < kanjiInformation.meanings.length; ++i) {
-          meaning += '\n' + (i + 1) + '. ' + kanjiInformation.meanings[i];
+          meaning += `\n${i + 1}. ${kanjiInformation.meanings[i]}`;
         }
         meaning += '\n```';
 
@@ -22,25 +22,25 @@
 
         readings += '\n```';
         if (kanjiInformation.readings.kunYomi.length > 0) {
-          readings += '\n- Kun-yomi: ' + kanjiInformation.readings.kunYomi.join(', ');
+          readings += `\n- Kun-yomi: ${kanjiInformation.readings.kunYomi.join(', ')}`;
         }
         if (kanjiInformation.readings.onYomi.length > 0) {
-          readings += '\n- On-yomi: ' + kanjiInformation.readings.onYomi.join(', ');
+          readings += `\n- On-yomi: ${kanjiInformation.readings.onYomi.join(', ')}`;
         }
         readings += '\n```'
 
         var stroke = '';
         if (kanjiInformation.stroke != undefined) {
-          stroke = ' (' + kanjiInformation.stroke + ' strokes)';
+          stroke = ` (${kanjiInformation.stroke} strokes)`;
         }
 
-        var information = 'Here\'s the information I got on ' + kanji + stroke +':\n';
-        information += meaning + '\n\n';
+        var information = `Here\'s the information I got on ${kanji}${stroke}:\n`;
+        information += `${meaning}\n\n`;
         information += readings;
 
         callback(information);
       } else {
-        callback('Do you want information on ' + kanji + '? I don\'t know that either!');
+        callback(`Do you want information on ${kanji}? I don\'t know that either!`);
       }
     });
   }

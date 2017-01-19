@@ -5,7 +5,7 @@
   function wordInformation(message, callback, word) {
     jisho.getWordInformation(word, function(error, wordInformation) {
       if (error) {
-        callback('Do you want information on ' + word + '? I don\'t know that either!');
+        callback(`Do you want information on ${word}? I don\'t know that either!`);
         return;
       }
 
@@ -18,38 +18,40 @@
           gramaticalClass = 'Its gramatical classes are:';
         }
 
-        gramaticalClass += '\n```\n' + wordInformation.tags.join(', ') + '\n```';
+        gramaticalClass += '\n```'
+        gramaticalClass += `\n${wordInformation.tags.join(', ')}`
+        gramaticalClass += '\n```';
 
         // Meanings
         var meaning = 'Its meanings are:';
 
         meaning += '\n```';
         for (var i = 0; i < wordInformation.meanings.length; ++i) {
-          meaning += '\n' + (i + 1) + '. ' + wordInformation.meanings[i];
+          meaning += `\n${i + 1}. ${wordInformation.meanings[i]}`;
         }
         meaning += '\n```';
 
         // Readings
-        var reading = 'Its reading is:';
-
-        reading += '\n```\n' + wordInformation.reading + '\n```';
+        var reading = 'Its reading is:\n```';
+        reading += `\n${wordInformation.reading}`
+        reading += '\n```';
 
         // Combining the informations
         var information = '';
 
         if (word !== wordInformation.inflection) {
-          information += word + ' looks like an inflection of ' + wordInformation.inflection + '\nHere\'s the information I got on it:';
+          information += `${word} looks like an inflection of ${wordInformation.inflection}\nHere\'s the information I got on it:`;
         } else {
-          information += 'Here\'s the information I got on ' + word + ':\n';
+          information += `Here\'s the information I got on ${word}:\n`;
         }
 
-        information += gramaticalClass + '\n\n';
-        information += meaning + '\n\n';
+        information += `${gramaticalClass}\n\n`;
+        information += `${meaning}\n\n`;
         information += reading;
 
         callback(information);
       } else {
-        callback('Do you want information on ' + word + '? I don\'t know that either!');
+        callback(`Do you want information on ${word}? I don\'t know that either!`);
       }
     });
   }

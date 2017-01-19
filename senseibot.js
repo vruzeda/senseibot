@@ -33,7 +33,7 @@
 
   app.listen(7001, function() {
     console.log('senseibot app listening on port 7001!');
-    console.log('variables: ' + JSON.stringify(variables));
+    console.log(`variables: ${JSON.stringify(variables)}`);
   });
 
   var rtm = new slack.RtmClient(variables.SLACK_API_TOKEN);

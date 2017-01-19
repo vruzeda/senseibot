@@ -8,13 +8,13 @@
   function sentence(message, callback, sentence) {
     jisho.getSentenceBreakdown(sentence, function(error, sentenceInformation) {
       if (error) {
-        callback('What\'s the meaning of ' + sentence + '? I don\'t know it either!');
+        callback(`What\'s the meaning of ${sentence}? I don\'t know it either!`);
         return;
       }
 
       if (sentenceInformation.words.length > 0) {
 
-        var words = '\'' + sentence + '\' breakdown: \n';
+        var words = `\'${sentence}\' breakdown: \n`;
 
         var calls = [];
 
@@ -36,7 +36,7 @@
             var word = select(sentenceword, './/a/text()').toString();
 
             //include it in the breakdown text even if it repeats
-            words += '[' + word + '] ';
+            words += `[${word}] `;
 
             //checking if word already was processed
             if (alreadyProcessedWords.indexOf(word) >= 0) {
@@ -72,15 +72,15 @@
 
                   if (wordInformation.meanings.length > 0) {
                     if (typeof wordInformation.inflection != 'undefined' && currentWord !== wordInformation.inflection) {
-                      wordInfoResult += '\n' + currentWord + ' looks like an inflection of ' + wordInformation.inflection + '. Its meanings are:';
+                      wordInfoResult += `\n${currentWord} looks like an inflection of ${wordInformation.inflection}. Its meanings are:`;
                     } else {
-                      wordInfoResult += '\n' + currentWord + '\'s meanings are:';
+                      wordInfoResult += `\n${currentWord}\'s meanings are:`;
                     }
 
                     wordInfoResult += '\n```';
 
                     for (var i = 0; i < wordInformation.meanings.length; ++i) {
-                      wordInfoResult += (i + 1) + '. ' + wordInformation.meanings[i] + '\n';
+                      wordInfoResult += `${i + 1}. ${wordInformation.meanings[i]}\n`;
                     }
 
                     wordInfoResult += '```';
@@ -106,7 +106,7 @@
         async.parallel(calls, function(error, result) {
           //if there was an error in any of the async requests
           if (error){
-            callback('What\'s the meaning of ' + sentence + '? I don\'t know it either!');
+            callback(`What\'s the meaning of ${sentence}? I don\'t know it either!`);
             return;
           }
 
@@ -119,7 +119,7 @@
         });
 
       } else {
-        callback('What\'s the meaning of ' + sentence + '? I don\'t know it either!');
+        callback(`What\'s the meaning of ${sentence}? I don\'t know it either!`);
       }
     });
   }

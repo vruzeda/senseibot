@@ -5,7 +5,7 @@
   function wordMeaning(message, callback, word) {
     jisho.getWordInformation(word, function(error, wordInformation) {
       if (error) {
-        callback('What\'s the meaning of ' + word + '? I don\'t know it either!');
+        callback(`What\'s the meaning of ${word}? I don\'t know it either!`);
         return;
       }
 
@@ -13,20 +13,20 @@
         var meaning = '';
 
         if (word !== wordInformation.inflection) {
-          meaning += word + ' looks like an inflection of ' + wordInformation.inflection + '. Its meanings are:';
+          meaning += `${word} looks like an inflection of ${wordInformation.inflection}. Its meanings are:`;
         } else {
-          meaning += word + '\'s meanings are:';
+          meaning += `${word}\'s meanings are:`;
         }
 
         meaning += '\n```';
         for (var i = 0; i < wordInformation.meanings.length; ++i) {
-          meaning += '\n' + (i + 1) + '. ' + wordInformation.meanings[i];
+          meaning += `\n${i + 1}. ${wordInformation.meanings[i]}`;
         }
         meaning += '\n```';
 
         callback(meaning);
       } else {
-        callback('What\'s the meaning of ' + word + '? I don\'t know it either!');
+        callback(`What\'s the meaning of ${word}? I don\'t know it either!`);
       }
     });
   }

@@ -8,11 +8,11 @@
     var apiKey = variables.WANIKANI_KEYS[username];
 
     if (!apiKey) {
-      callback(new Error('Username ' + username + ' not in the database'), undefined);
+      callback(new Error(`Username ${username} not in the database`), undefined);
       return;
     }
 
-    request('https://www.wanikani.com/api/user/' + apiKey + '/' + action, function(error, response, dataString) {
+    request(`https://www.wanikani.com/api/user/${apiKey}/${action}`, function(error, response, dataString) {
       if (error) {
         callback(error, undefined);
         return;

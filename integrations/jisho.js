@@ -5,7 +5,7 @@
   var DOMParser = require('xmldom').DOMParser;
 
   function feelingLucky(search, callback) {
-    request('http://jisho.org/search/' + encodeURI(search), function(error, response, data) {
+    request(`http://jisho.org/search/${encodeURI(search)}`, function(error, response, data) {
       if (error) {
         callback(error, response, data);
         return;
@@ -15,7 +15,7 @@
       var detailsLinkNodes = select(doc, '//a[@class="light-details_link"]/@href[1]');
 
       if (detailsLinkNodes.length == 0) {
-        callback(new Error('Couldn\'t find anything related to ' + search), response, data);
+        callback(new Error(`Couldn\'t find anything related to ${search}`), response, data);
         return
       }
 
@@ -25,7 +25,7 @@
   }
 
   function getKanjiInformation(kanji, callback) {
-    request('http://jisho.org/search/' + encodeURI(kanji) + '%20%23kanji', function(error, response, data) {
+    request(`http://jisho.org/search/${encodeURI(kanji)}%20%23kanji`, function(error, response, data) {
       if (error) {
         callback(error, undefined);
         return;
@@ -78,7 +78,7 @@
   }
 
   function getParticleInformation(particle, callback) {
-    request('http://jisho.org/search/' + encodeURI(particle) + '%20%23particle', function(error, response, data) {
+    request(`http://jisho.org/search/${encodeURI(particle)}%20%23particle`, function(error, response, data) {
       if (error) {
         callback(error, undefined);
         return;
@@ -170,7 +170,7 @@
           if (furiganaNode.length == 0) {
             wordInformation.reading += textNode;
           } else {
-            wordInformation.reading += '[' + textNode + ':' + furiganaNode + ']';
+            wordInformation.reading += `[${textNode}:${furiganaNode}]`;
           }
         }
 
@@ -190,7 +190,7 @@
   }
 
   function getSentenceBreakdown(sentence, callback) {
-    request('http://jisho.org/search/' + encodeURI(sentence), function(error, response, data) {
+    request(`http://jisho.org/search/${encodeURI(sentence)}`, function(error, response, data) {
       if (error) {
         callback(error, undefined);
         return;

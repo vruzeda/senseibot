@@ -4,14 +4,14 @@
     var help;
 
     if (invalidCommand) {
-      help = 'ごめん, I don\'t understand this: [' + invalidCommand + ']. Valid commands:\n>>>';
+      help = `ごめん, I don\'t understand this: [${invalidCommand}]. Valid commands:\n>>>`;
     } else {
       help = 'Valid commands:\n>>>';
     }
 
     var commands = require('./commands');
     for (var i = 0; i < commands.length; ++i) {
-      help += commands[i].description + '\n';
+      help += `${commands[i].description} \n`;
     }
 
     callback(help);
