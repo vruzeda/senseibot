@@ -1,6 +1,6 @@
 (function() {
 
-  var wanikani = require('../integrations/wanikani.js');
+  var wanikani = require('../integrations/wanikani');
 
   function wanikaniProgression(message, callback, username) {
     wanikani.getProgression(username || message.userName, function (error, progression) {

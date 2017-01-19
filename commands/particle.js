@@ -1,6 +1,6 @@
 (function() {
 
-  var jisho = require('../integrations/jisho.js');
+  var jisho = require('../integrations/jisho');
 
   function particle(message, callback, particle) {
     jisho.getParticleInformation(particle, function(error, particleInformation) {

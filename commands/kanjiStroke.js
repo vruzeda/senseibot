@@ -1,6 +1,6 @@
 (function() {
 
-  var jisho = require('../integrations/jisho.js');
+  var jisho = require('../integrations/jisho');
   var async = require('async');
 
   function kanjiStroke(message, callback, kanji) {

@@ -1,6 +1,6 @@
 (function() {
 
-  var wanikani = require('../integrations/wanikani.js');
+  var wanikani = require('../integrations/wanikani');
 
   function wanikaniStatus(message, callback, username) {
     wanikani.getStatus(username || message.userName, function (error, status) {

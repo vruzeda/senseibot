@@ -4,7 +4,7 @@
   var request = require('request');
 
   function performAction(username, action, callback) {
-    var variables = require('../variables.js');
+    var variables = require('../variables');
     var apiKey = variables.WANIKANI_KEYS[username];
 
     if (!apiKey) {

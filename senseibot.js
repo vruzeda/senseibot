@@ -4,8 +4,8 @@
   var express = require('express');
   var slack = require('@slack/client');
 
-  var variables = require('./variables.js');
-  var parseCommand = require('./commands/parseCommand.js');
+  var variables = require('./variables');
+  var parseCommand = require('./commands/parseCommand');
 
   var app = express();
 

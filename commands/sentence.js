@@ -3,7 +3,7 @@
   var select = require('xpath.js');
   var async = require('async');
 
-  var jisho = require('../integrations/jisho.js');
+  var jisho = require('../integrations/jisho');
 
   function sentence(message, callback, sentence) {
     jisho.getSentenceBreakdown(sentence, function(error, sentenceInformation) {

@@ -1,18 +1,18 @@
 (function() {
 
   module.exports = [
-    require('./kanjiInformation.js'),
-    require('./kanjiMeaning.js'),
-    require('./kanjiReading.js'),
-    require('./kanjiStroke.js'),
-    require('./particle.js'),
-    require('./sentence.js'),
-    require('./wanikaniProgression.js'),
-    require('./wanikaniStatus.js'),
-    require('./wordInformation.js'),
-    require('./wordMeaning.js'),
-    require('./wordReading.js'),
-    require('./help.js')
+    require('./kanjiInformation'),
+    require('./kanjiMeaning'),
+    require('./kanjiReading'),
+    require('./kanjiStroke'),
+    require('./particle'),
+    require('./sentence'),
+    require('./wanikaniProgression'),
+    require('./wanikaniStatus'),
+    require('./wordInformation'),
+    require('./wordMeaning'),
+    require('./wordReading'),
+    require('./help')
   ];
 
 })();

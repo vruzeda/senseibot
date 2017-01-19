@@ -1,6 +1,6 @@
 (function() {
 
-  var jisho = require('../integrations/jisho.js');
+  var jisho = require('../integrations/jisho');
 
   function kanjiMeaning(message, callback, kanji) {
     jisho.getKanjiInformation(kanji, function(error, kanjiInformation) {

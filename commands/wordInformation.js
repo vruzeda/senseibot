@@ -1,6 +1,6 @@
 (function() {
 
-  var jisho = require('../integrations/jisho.js');
+  var jisho = require('../integrations/jisho');
 
   function wordInformation(message, callback, word) {
     jisho.getWordInformation(word, function(error, wordInformation) {
