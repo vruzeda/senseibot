@@ -3,7 +3,7 @@
   var wanikani = require('../integrations/wanikani.js');
 
   function wanikaniProgression(message, callback, username) {
-    wanikani.getProgression(username, function (error, progression) {
+    wanikani.getProgression(username || message.userName, function (error, progression) {
       if (error) {
         callback('Uh-oh! Something went wrong: ' + error.message);
         return;
@@ -18,9 +18,9 @@
   }
 
   module.exports = {
-    pattern: /^wanikani progression (.*)$/,
+    pattern: /^wanikani progression(?: (.*))?$/,
     handler: wanikaniProgression,
-    description: '*senseibot wanikani progression &lt;username&gt;* : returns the wanikani level of the user and the % of completion on radicals and kanjis'
+    description: '*senseibot wanikani progression [&lt;username&gt;]* : returns the wanikani level of the user and the % of completion on radicals and kanjis'
   };
 
 })();

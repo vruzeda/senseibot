@@ -3,7 +3,7 @@
   var wanikani = require('../integrations/wanikani.js');
 
   function wanikaniStatus(message, callback, username) {
-    wanikani.getStatus(username, function (error, status) {
+    wanikani.getStatus(username || message.userName, function (error, status) {
       if (error) {
         callback('Uh-oh! Something went wrong: ' + error.message);
         return;
@@ -16,9 +16,9 @@
   }
 
   module.exports = {
-    pattern: /^wanikani status (.*)$/,
+    pattern: /^wanikani status(?: (.*))?$/,
     handler: wanikaniStatus,
-    description: '*senseibot wanikani status &lt;username&gt;* : returns the wanikani level of the user and the number of available lessons/reviews'
+    description: '*senseibot wanikani status [&lt;username&gt;]* : returns the wanikani level of the user and the number of available lessons/reviews'
   };
 
 }());
