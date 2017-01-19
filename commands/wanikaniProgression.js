@@ -2,7 +2,7 @@
 
   var wanikani = require('../integrations/wanikani.js');
 
-  function wanikaniProgression(callback, username) {
+  function wanikaniProgression(message, callback, username) {
     wanikani.getProgression(username, function (error, progression) {
       if (error) {
         callback('Uh-oh! Something went wrong: ' + error.message);

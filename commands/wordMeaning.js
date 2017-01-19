@@ -2,7 +2,7 @@
 
   var jisho = require('../integrations/jisho.js');
 
-  function wordMeaning(callback, word) {
+  function wordMeaning(message, callback, word) {
     jisho.getWordInformation(word, function(error, wordInformation) {
       if (error) {
         callback('What\'s the meaning of ' + word + '? I don\'t know it either!');

@@ -2,7 +2,7 @@
 
   var wanikani = require('../integrations/wanikani.js');
 
-  function wanikaniStatus(callback, username) {
+  function wanikaniStatus(message, callback, username) {
     wanikani.getStatus(username, function (error, status) {
       if (error) {
         callback('Uh-oh! Something went wrong: ' + error.message);

@@ -15,10 +15,19 @@
 
   app.post('/trigger', function(slackRequest, slackResponse) {
     if (slackRequest.body.token === variables.SLACK_TOKEN) {
-      var userCommand = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
-      parseCommand(function(response) {
-        slackResponse.send('{"text": ' + JSON.stringify(response) + '}');
-      }, userCommand);
+      var message = {
+        userName: slackRequest.body.user_name,
+        userText: slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim()
+      };
+
+      parseCommand(message, function(response) {
+        if (!response) {
+          slackResponse.status(404).send();
+          return;
+        }
+
+        slackResponse.send(`{"text": ${JSON.stringify(response)}}`);
+      });
     }
   });
 
@@ -34,15 +43,27 @@
     console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}`);
   });
 
-  rtm.on(slack.RTM_EVENTS.MESSAGE, function(message) {
+  rtm.on(slack.RTM_EVENTS.MESSAGE, function(slackMessage) {
+    if (slackMessage.type === 'message') {
+      if (slackMessage.subtype === 'message_changed') {
+        slackMessage.text = slackMessage.text || slackMessage.message.text;
+        slackMessage.user = slackMessage.user || slackMessage.message.user;
+      }
 
-    if (message.type === 'message') {
-      var text = (message.subtype === 'message_changed') ? message.message.text : message.text;
+      var text = slackMessage.text;
       if (text && text.indexOf(`<@${rtm.startData.self.id}>`) == 0) {
-        var userCommand = text.substr(`<@${rtm.startData.self.id}>`.length).replace(/\s+/g, ' ').trim();
-        parseCommand(function(response) {
-          rtm.sendMessage(response, message.channel);
-        }, userCommand);
+        var message = {
+          userName: this.dataStore.getUserById(slackMessage.user).name,
+          userText: text.substr(`<@${rtm.startData.self.id}>`.length).replace(/\s+/g, ' ').trim()
+        };
+
+        parseCommand(message, function(response) {
+          if (!response) {
+            return;
+          }
+
+          rtm.sendMessage(response, slackMessage.channel);
+        });
       }
     }
   });

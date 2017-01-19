@@ -3,7 +3,7 @@
   var jisho = require('../integrations/jisho.js');
   var async = require('async');
 
-  function kanjiStroke(callback, kanji) {
+  function kanjiStroke(message, callback, kanji) {
     var kanjiList = kanji.split(' ');
     var calls = [];
 

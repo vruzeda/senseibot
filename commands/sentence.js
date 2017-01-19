@@ -5,7 +5,7 @@
 
   var jisho = require('../integrations/jisho.js');
 
-  function sentence(callback, sentence) {
+  function sentence(message, callback, sentence) {
     jisho.getSentenceBreakdown(sentence, function(error, sentenceInformation) {
       if (error) {
         callback('What\'s the meaning of ' + sentence + '? I don\'t know it either!');

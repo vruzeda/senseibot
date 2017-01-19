@@ -2,7 +2,7 @@
 
   var jisho = require('../integrations/jisho.js');
 
-  function kanjiInformation(callback, kanji) {
+  function kanjiInformation(message, callback, kanji) {
     jisho.getKanjiInformation(kanji, function(error, kanjiInformation) {
       if (error) {
         callback('Do you want information on ' + kanji + '? I don\'t know that either!');

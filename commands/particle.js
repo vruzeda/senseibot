@@ -2,7 +2,7 @@
 
   var jisho = require('../integrations/jisho.js');
 
-  function particle(callback, particle) {
+  function particle(message, callback, particle) {
     jisho.getParticleInformation(particle, function(error, particleInformation) {
       if (error) {
         callback('What\'s the meaning of ' + particle + '? I don\'t know it either!');
