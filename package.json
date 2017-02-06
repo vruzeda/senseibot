@@ -5,8 +5,8 @@
   "dependencies": {
     "@slack/client": "^3.8.1",
     "async": "^2.1.4",
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
+    "body-parser": "^1.16.0",
+    "express": "^4.14.1",
     "request": "^2.79.0",
     "xmldom": "^0.1.27",
     "xpath.js": "^1.0.7"
